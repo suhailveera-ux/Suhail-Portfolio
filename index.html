@@ -162,16 +162,16 @@ main,.ftr{position:relative;z-index:2}
 .stat-figure .suf{font-size:.55em;color:var(--lime);margin:.12em 0 0 .06em}
 .stat-label{margin-top:14px;font:700 12px/1.3 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--lime)}.stat-sub{margin-top:6px;font-size:16px;line-height:1.5;color:var(--dim)}
 /* ---------- marquee (full-bleed lime) ---------- */
-.band{position:relative;overflow:hidden;background:linear-gradient(180deg,#d4fb3c 0%,var(--lime) 45%,#b9e82a 100%);color:var(--lime-ink);border-block:2px solid var(--lime-ink);box-shadow:0 0 70px rgba(198,244,50,.28),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(16,22,4,.25)}
-.band::before,.band::after{content:"";position:absolute;top:0;bottom:0;width:clamp(50px,9vw,170px);z-index:2;pointer-events:none}
-.band::before{left:0;background:linear-gradient(90deg,#b9e82a,rgba(198,244,50,0))}
-.band::after{right:0;background:linear-gradient(270deg,#b9e82a,rgba(198,244,50,0))}
-.mq{position:relative;height:clamp(104px,12.5vw,176px);display:flex;align-items:center;overflow:hidden}
-.mq-track{display:flex;flex:none;width:max-content;will-change:transform}
-.mq-item{display:flex;align-items:center;gap:clamp(26px,3.6vw,64px);padding-right:clamp(26px,3.6vw,64px);font:800 clamp(38px,6vw,96px)/1 var(--sans);text-transform:uppercase;letter-spacing:-.045em;white-space:nowrap}
-.mq-item:nth-child(even){color:transparent;-webkit-text-stroke:clamp(1.5px,.14vw,2.5px) var(--lime-ink)}
-.mq-inf{flex:none;width:clamp(44px,5.2vw,84px);height:auto;aspect-ratio:2/1;fill:none;stroke:var(--lime-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;animation:mqp 3s ease-in-out infinite}@keyframes mqp{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.14) rotate(-4deg)}}
-@media (prefers-reduced-motion:reduce){.mq-inf{animation:none}}
+.band{position:relative;box-sizing:border-box;width:100%;max-width:100%;overflow:hidden;background:linear-gradient(180deg,#d2f93a 0%,var(--lime) 50%,#bbe92b 100%);color:var(--lime-ink);border-block:1px solid rgba(16,22,4,.55);box-shadow:0 0 44px rgba(198,244,50,.2),inset 0 1px 0 rgba(255,255,255,.4);contain:paint}
+.band::after{content:"";position:absolute;inset:0 auto 0 0;width:28%;z-index:1;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.34) 50%,transparent);transform:translate3d(-130%,0,0);animation:mqshine 7s cubic-bezier(.4,0,.2,1) infinite;will-change:transform}
+@keyframes mqshine{0%,55%{transform:translate3d(-130%,0,0)}100%{transform:translate3d(460%,0,0)}}
+.mq{position:relative;box-sizing:border-box;width:100%;max-width:1680px;margin-inline:auto;height:clamp(62px,7.2vw,104px);display:flex;align-items:center;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 clamp(24px,6vw,110px),#000 calc(100% - clamp(24px,6vw,110px)),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 clamp(24px,6vw,110px),#000 calc(100% - clamp(24px,6vw,110px)),transparent 100%)}
+.mq-track{display:flex;flex:none;width:max-content;will-change:transform;backface-visibility:hidden}
+.mq-item{display:flex;align-items:center;gap:clamp(16px,2.4vw,40px);padding-right:clamp(16px,2.4vw,40px);font:800 clamp(20px,3vw,46px)/1 var(--sans);text-transform:uppercase;letter-spacing:-.03em;white-space:nowrap;text-shadow:0 1px 0 rgba(255,255,255,.28)}
+.mq-item:nth-child(even){color:rgba(16,22,4,.62)}
+.mq-inf{flex:none;width:clamp(26px,3vw,46px);height:auto;aspect-ratio:2/1;fill:none;stroke:var(--lime-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;animation:mqp 3.2s ease-in-out infinite}@keyframes mqp{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@media (max-width:600px){.mq-item{letter-spacing:-.02em}}
+@media (prefers-reduced-motion:reduce){.mq-inf,.band::after{animation:none}.band::after{display:none}}
 /* ---------- services slider ---------- */
 .svc{position:relative}
 .svc-shell{position:relative;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(30px,5vw,90px);align-items:center;min-height:100svh;padding-top:112px;padding-bottom:124px}
@@ -842,9 +842,11 @@ function initHero(){const h1=$('#hero-title'),items=$$('[data-hero]'),stage=$('#
   $('.hero').addEventListener('pointermove',e=>{const r=stage.getBoundingClientRect(),nx=clamp((e.clientX-r.left)/r.width-.5,-1,1),ny=clamp((e.clientY-r.top)/r.height-.5,-1,1);ry(nx*12);rx(-ny*12);px((e.clientX/innerWidth-.5)*14);py((e.clientY/innerHeight-.5)*10)});$('.hero').addEventListener('pointerleave',()=>{rx(0);ry(0);px(0);py(0)})}
  return()=>tp.then(api=>{const tl=gsap.timeline();if(api)tl.add(api.play(),0);tl.to(items,{opacity:1,y:0,duration:.8,stagger:.08,ease:'power3.out'},api?.3:0).to(stage,{opacity:1,y:0,scale:1,duration:1.2,ease:'power3.out'},.12)})}
 /* ---------- lime marquee (velocity-reactive) ---------- */
-function initMarquee(){const row=$('#mq');if(!row)return;const item=C.CLIENTS.map(c=>`<span class="mq-item">${esc(c.name)}${INF}</span>`).join('');let k=1;const fill=n=>{row.innerHTML=`<div class="mq-track"><div class="mq-group" style="display:flex">${item.repeat(n)}</div><div class="mq-group" style="display:flex" aria-hidden="true">${item.repeat(n)}</div></div>`;k=n};fill(1);
- const fit=()=>{const g=row.querySelector('.mq-group');const one=g.offsetWidth/k,need=Math.max(1,Math.ceil(innerWidth*1.2/Math.max(1,one)));if(need!==k)fill(need)};fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(fit,250)});
- if(!hasGSAP||reduced)return;let x=0,vel=0;if(lenis)lenis.on('scroll',e=>{vel=e.velocity||0});gsap.ticker.add(()=>{const tr=row.querySelector('.mq-track');if(!tr||document.hidden)return;const w=tr.querySelector('.mq-group').offsetWidth||1;x-=.9+Math.min(Math.abs(vel),60)*.09;if(x<=-w)x+=w;vel*=.92;tr.style.transform=`translate3d(${x.toFixed(1)}px,0,0)`})}
+function initMarquee(){const row=$('#mq');if(!row)return;const item=C.CLIENTS.map(c=>`<span class="mq-item">${esc(c.name)}${INF}</span>`).join('');let k=1,anim=null,rate=1,boost=0;const fill=n=>{row.innerHTML=`<div class="mq-track"><div class="mq-group" style="display:flex">${item.repeat(n)}</div><div class="mq-group" style="display:flex" aria-hidden="true">${item.repeat(n)}</div></div>`;k=n};fill(1);
+ /* compositor-driven loop: slides exactly one group width, so the restart is invisible; speed scales with viewport */
+ const run=()=>{const tr=row.querySelector('.mq-track');if(!tr)return;if(anim){anim.cancel();anim=null}if(reduced||!tr.animate)return;const w=tr.querySelector('.mq-group').offsetWidth||1,sp=Math.min(88,Math.max(36,innerWidth*.05));anim=tr.animate([{transform:'translate3d(0,0,0)'},{transform:`translate3d(${-w}px,0,0)`}],{duration:w/sp*1000,iterations:Infinity,easing:'linear'})};
+ const fit=()=>{const g=row.querySelector('.mq-group');const one=g.offsetWidth/k,need=Math.max(1,Math.ceil(row.clientWidth*1.2/Math.max(1,one)));if(need!==k)fill(need);run()};fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(fit,250)});
+ if(!hasGSAP||reduced||!lenis)return;lenis.on('scroll',e=>{boost=Math.min(Math.abs(e.velocity||0),40)*.1});gsap.ticker.add(()=>{if(!anim||document.hidden)return;rate+=(1+boost-rate)*.1;boost*=.9;anim.playbackRate=Math.max(.2,rate)})}
 /* ---------- services slider ---------- */
 let svcIdx=0;
 function initServices(){const sec=$('#services'),stage=$('#svc-stage'),panels=$$('.svc-panel'),nums=$$('.svc-num'),dots=$$('.svc-dots button'),prev=$('#svc-prev'),next=$('#svc-next'),cur=$('#svc-cur'),scn=$('#svc-scene'),S=C.SERVICES,max=panels.length-1,SCENE=['funnel','funnel','net','helix','net'];let mode='static',st=null;
