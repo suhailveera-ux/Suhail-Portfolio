@@ -1,0 +1,9 @@
+{
+  "name": "suhail-portfolio-blog",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static blog generator for suhailbhat07.netlify.app. Reads content/blog/*.md and builds static HTML into /blog/. Zero runtime dependencies on purpose — nothing to fetch at build time.",
+  "scripts": {
+    "build": "node scripts/build-blog.js"
+  }
+}
