@@ -12,21 +12,25 @@ function navHref(key, currentIsBlog) {
   return currentIsBlog ? `/#${key}` : `#${key}`;
 }
 
+// Blog sits second-to-last in the menu, right before Contact, matching the
+// homepage's NAV order: Home, Services, Work, Websites, Clients,
+// Experience, Blog, Contact.
 function headerHTML({ activeBlog = true } = {}) {
-  const links = NAV.map(
-    n => `<a href="${navHref(n[0], true)}"${n[0] === 'top' ? '' : ''}>${n[1]}</a>`
-  ).join('');
+  const main = NAV.slice(0, -1);
+  const last = NAV.slice(-1);
+  const linkOf = n => `<a href="${navHref(n[0], true)}">${n[1]}</a>`;
   const blogLink = `<a href="/blog/" data-nav="blog" class="${activeBlog ? 'active' : ''}">Blog</a>`;
-  const mmLinks = NAV.map(
-    (n, i) => `<a class="ml" href="${navHref(n[0], true)}" tabindex="-1"><span>0${i}</span>${n[1]}</a>`
-  ).join('');
-  const mmBlog = `<a class="ml" href="/blog/" tabindex="-1"><span>0${NAV.length}</span>Blog</a>`;
-  return `<div id="site-header"><header class="hdr" id="hdr"><a class="brand" href="/" aria-label="${escHtml(BRAND_NAME)}, back to home"><span class="bm" aria-hidden="true">SRB</span><span class="bt">${escHtml(BRAND_NAME)}<small>Srinagar, Kashmir</small></span></a><nav class="hnav" aria-label="Primary">${links}${blogLink}</nav><a class="btn btn-p hwa" href="${WA_LINK}" target="_blank" rel="noopener noreferrer" data-magnetic data-cursor="Chat">WhatsApp me</a><button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mm"><span></span><span></span></button></header>
-<div class="mm" id="mm" aria-hidden="true">${mmLinks}${mmBlog}<a class="btn btn-p" href="${WA_LINK}" target="_blank" rel="noopener noreferrer" tabindex="-1">WhatsApp me</a></div></div>`;
+  const links = main.map(linkOf).join('') + blogLink + last.map(linkOf).join('');
+  const mmLinkOf = (n, i) => `<a class="ml" href="${navHref(n[0], true)}" tabindex="-1"><span>0${i}</span>${n[1]}</a>`;
+  const mmBlog = `<a class="ml" href="/blog/" tabindex="-1"><span>0${main.length}</span>Blog</a>`;
+  const mmLinks = main.map(mmLinkOf).join('') + mmBlog + last.map((n, i) => mmLinkOf(n, main.length + 1 + i)).join('');
+  return `<div id="site-header"><header class="hdr" id="hdr"><a class="brand" href="/" aria-label="${escHtml(BRAND_NAME)}, back to home"><span class="bm" aria-hidden="true">SRB</span><span class="bt">${escHtml(BRAND_NAME)}<small>Srinagar, Kashmir</small></span></a><nav class="hnav" aria-label="Primary">${links}</nav><a class="btn btn-p hwa" href="${WA_LINK}" target="_blank" rel="noopener noreferrer" data-magnetic data-cursor="Chat">WhatsApp me</a><button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mm"><span></span><span></span></button></header>
+<div class="mm" id="mm" aria-hidden="true">${mmLinks}<a class="btn btn-p" href="${WA_LINK}" target="_blank" rel="noopener noreferrer" tabindex="-1">WhatsApp me</a></div></div>`;
 }
 
 function footerHTML() {
-  const sections = NAV.map(n => `<a href="${navHref(n[0], true)}">${n[1]}</a>`).join('') + `<a href="/blog/">Blog</a>`;
+  const linkOf = n => `<a href="${navHref(n[0], true)}">${n[1]}</a>`;
+  const sections = NAV.slice(0, -1).map(linkOf).join('') + `<a href="/blog/">Blog</a>` + NAV.slice(-1).map(linkOf).join('');
   return `<div id="site-footer"><footer class="ftr"><div class="shell"><div class="ftr-grid"><nav aria-label="Footer"><h4>Sections</h4>${sections}</nav><div><h4>Live websites</h4><a href="https://thekashmirparadisetours.com/" target="_blank" rel="noopener noreferrer">The Kashmir Paradise Tours ↗</a><a href="https://adwizardai.netlify.app/" target="_blank" rel="noopener noreferrer">AdWizard AI ↗</a><a href="https://friendskhatamband.com/" target="_blank" rel="noopener noreferrer">Friends Khatam Band ↗</a></div><div><h4>Contact</h4><a href="${WA_LINK}" target="_blank" rel="noopener noreferrer">WhatsApp</a><a href="mailto:rashidsuhail573@gmail.com">rashidsuhail573@gmail.com</a><a href="tel:+917780891426">+91 77808 91426</a><p>Srinagar, Jammu &amp; Kashmir</p></div></div><div class="ftr-bot"><span>© <span id="yr">2026</span> ${escHtml(BRAND_NAME)} · Srinagar, Jammu &amp; Kashmir</span><button class="totop" id="totop" type="button">Back to top ↑</button></div></div></footer></div>`;
 }
 

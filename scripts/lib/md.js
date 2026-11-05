@@ -18,6 +18,24 @@ function escHtml(s) {
     .replace(/"/g, '&quot;');
 }
 
+// Converts straight ASCII quotes/apostrophes and -- into the typographic
+// characters the rest of the site already uses (e.g. the homepage's
+// "Let's talk", "hotel in Srinagar" use curly '/" marks, not straight
+// ones). Runs on prose text only — code spans are stashed out before this
+// is called, and frontmatter is parsed separately, so neither is touched.
+function smartTypography(s) {
+  return s
+    .replace(/\.\.\./g, '…')
+    .replace(/(^|[^-])--(?!-)/g, '$1—')
+    // apostrophes (contractions/possessives): don't, it's, 90's
+    .replace(/([a-zA-Z0-9])'([a-zA-Z])/g, '$1’$2')
+    // a lone leading apostrophe, e.g. 'twas — rare, but handle it as a quote
+    .replace(/(^|[\s(“])'(\S)/g, '$1‘$2')
+    // double quotes: opening after start/whitespace/bracket, else closing
+    .replace(/(^|[\s(‘])"(\S)/g, '$1“$2')
+    .replace(/"/g, '”');
+}
+
 function slugify(text) {
   return String(text)
     .toLowerCase()
@@ -35,7 +53,7 @@ function renderInline(text) {
     codeStash.push(`<code>${escHtml(code)}</code>`);
     return `\u0000${codeStash.length - 1}\u0000`;
   });
-  out = escHtml(out).replace(/\u0000(\d+)\u0000/g, (_, i) => codeStash[Number(i)]);
+  out = escHtml(smartTypography(out)).replace(/\u0000(\d+)\u0000/g, (_, i) => codeStash[Number(i)]);
   // links [text](url)
   out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, t, u) => {
     const external = /^https?:\/\//.test(u);

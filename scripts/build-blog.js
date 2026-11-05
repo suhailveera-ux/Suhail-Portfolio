@@ -143,17 +143,17 @@ function buildIndex(posts) {
 <p class="lead" data-reveal>Practical notes on performance marketing, Meta and Google Ads, SEO, website development and AI automation — written from day-to-day campaign and build work, not theory.</p>
 </section>
 ${featured ? `<section class="sec shell" aria-label="Featured article">${featuredHTML(featured)}</section>` : ''}
-<section class="sec shell" aria-labelledby="latest-h">
+${rest.length ? `<section class="sec shell" aria-labelledby="latest-h">
 <div class="blog-filters"><h2 class="h2" id="latest-h" style="font-size:clamp(24px,2.6vw,36px)">Latest <span class="accent it">articles.</span></h2>${filtersHTML}</div>
 <div class="grid-articles" id="blog-grid">${gridHTML}</div>
 <p class="wall-empty a-empty" id="blog-empty" hidden>No articles in this category yet.</p>
-</section>
+</section>` : ''}
 <section class="sec shell" aria-labelledby="blog-cta-h">
 <div class="contact-grid" style="grid-template-columns:1fr">
 <div style="max-width:640px">
-<div class="kicker" data-reveal><span class="sn">·</span><span>Let's talk</span></div>
+<div class="kicker" data-reveal><span class="sn">·</span><span>Let’s talk</span></div>
 <h2 class="h2" id="blog-cta-h" data-reveal>Thinking about a campaign, a site, or an automation?</h2>
-<p class="lead" data-reveal style="margin-top:18px">Tell me what you're trying to grow and I'll reply with the first tests I'd run.</p>
+<p class="lead" data-reveal style="margin-top:18px">Tell me what you’re trying to grow and I’ll reply with the first tests I’d run.</p>
 <div class="hero-actions" data-reveal style="margin-top:26px"><a class="btn btn-p" href="https://wa.me/${CONTACT.wa}?text=${encodeURIComponent('Hi Suhail, I read your blog and would like to talk campaigns.')}" target="_blank" rel="noopener noreferrer" data-magnetic data-cursor="Chat">WhatsApp me ${ARROW_SVG}</a><a class="btn btn-s" href="/#contact" data-magnetic>Other ways to reach me</a></div>
 </div>
 </div>
@@ -248,10 +248,10 @@ ${post.image ? `<div class="art-media"><img src="${escHtml(post.image)}" alt="${
 <div class="prose">${post.html}</div>
 ${shareHTML(post, url)}
 <div class="art-author-box"><span class="av">${escHtml(authorInitials(post.author))}</span><div><h4>${escHtml(post.author || BRAND_NAME)}</h4><p>Performance Marketing &amp; AI Manager at Global Chinar, Srinagar. Writes about what actually moves the numbers in Meta Ads, Google Ads, SEO and AI-assisted lead flows.</p></div></div>
-<div class="art-nav">
+${(next || prev) ? `<div class="art-nav">
 ${next ? `<a href="/blog/${escHtml(next.slug)}/"><span class="dir">← Older</span><b>${escHtml(next.title || '')}</b></a>` : '<span></span>'}
 ${prev ? `<a class="next" href="/blog/${escHtml(prev.slug)}/"><span class="dir">Newer →</span><b>${escHtml(prev.title || '')}</b></a>` : '<span></span>'}
-</div>
+</div>` : ''}
 ${relatedFallback.length ? `<div class="related-head"><h3 class="h2" style="font-size:clamp(22px,2.4vw,30px)">Related <span class="accent it">reading.</span></h3></div><div class="grid-articles">${relatedFallback.map(postCardHTML).join('')}</div>` : ''}
 </div>
 ${tocHTML(post.toc)}
@@ -303,7 +303,7 @@ function build404() {
   const body = `<section class="err404 shell">
 <span class="mono big">404</span>
 <h1>This page wandered off the map.</h1>
-<p>The page you're looking for doesn't exist, or the link may be out of date. Try the homepage or the blog instead.</p>
+<p>The page you’re looking for doesn’t exist, or the link may be out of date. Try the homepage or the blog instead.</p>
 <div class="hero-actions"><a class="btn btn-p" href="/">Back to homepage ${ARROW_SVG}</a><a class="btn btn-s" href="/blog/">Visit the blog</a></div>
 </section>`;
   const html = page({
