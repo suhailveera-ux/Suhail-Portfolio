@@ -148,6 +148,13 @@ ${rest.length ? `<section class="sec shell" aria-labelledby="latest-h">
 <div class="grid-articles" id="blog-grid">${gridHTML}</div>
 <p class="wall-empty a-empty" id="blog-empty" hidden>No articles in this category yet.</p>
 </section>` : ''}
+${!posts.length ? `<section class="sec shell" aria-labelledby="empty-h">
+<div class="wall-empty" data-reveal style="text-align:center;padding:48px 24px">
+<div class="kicker" style="justify-content:center"><span class="sn">·</span><span>Coming soon</span></div>
+<h2 class="h2" id="empty-h" style="font-size:clamp(22px,2.4vw,30px);margin-top:14px">New articles are on the way.</h2>
+<p class="lead" style="margin-top:14px;max-width:52ch;margin-left:auto;margin-right:auto">I’m working on the first posts — practical notes on Meta Ads, Google Ads, SEO, website development and AI automation. Check back soon.</p>
+</div>
+</section>` : ''}
 <section class="sec shell" aria-labelledby="blog-cta-h">
 <div class="contact-grid" style="grid-template-columns:1fr">
 <div style="max-width:640px">
