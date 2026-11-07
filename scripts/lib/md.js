@@ -100,8 +100,40 @@ function renderMarkdown(md) {
       continue;
     }
 
+    // cta block: ::: cta Button label|https://destination-url \n supporting text \n :::
+    const ctaStart = line.match(/^:::cta\s+(.*)$/);
+    if (ctaStart) {
+      flushList();
+      const [label, href] = ctaStart[1].split('|').map(s => s.trim());
+      const body = [];
+      i++;
+      while (i < lines.length && lines[i].trim() !== ':::') { body.push(lines[i]); i++; }
+      i++; // skip closing :::
+      const external = /^https?:\/\//.test(href || '');
+      const attrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
+      html.push(
+        `<div class="cta-block"><p>${renderInline(body.join(' ').trim())}</p><a class="btn btn-p" href="${escHtml(href || '#contact')}"${attrs}>${escHtml(label || 'Get in touch')}</a></div>`
+      );
+      continue;
+    }
+
     // horizontal rule
     if (/^-{3,}$/.test(line.trim())) { flushList(); html.push('<hr>'); i++; continue; }
+
+    // GFM-style pipe table: a header row, a |---|---| separator row, then
+    // one or more data rows, each starting/ending with '|'.
+    if (/^\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/.test(lines[i + 1].trim())) {
+      flushList();
+      const splitRow = row => row.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+      const headCells = splitRow(line);
+      i += 2; // skip header + separator
+      const rows = [];
+      while (i < lines.length && /^\|.*\|\s*$/.test(lines[i])) { rows.push(splitRow(lines[i])); i++; }
+      const thead = `<thead><tr>${headCells.map(c => `<th>${renderInline(c)}</th>`).join('')}</tr></thead>`;
+      const tbody = `<tbody>${rows.map(r => `<tr>${r.map(c => `<td>${renderInline(c)}</td>`).join('')}</tr>`).join('')}</tbody>`;
+      html.push(`<div class="table-wrap"><table>${thead}${tbody}</table></div>`);
+      continue;
+    }
 
     // headings
     const h = line.match(/^(#{2,3})\s+(.*)$/);

@@ -21,6 +21,7 @@ const WA_LINK = `https://wa.me/${CONTACT.wa}?text=${encodeURIComponent(WA_TEXT)}
 // anchors on the homepage (so from a blog page they become '/#id').
 const NAV = [
   ['top', 'Home'],
+  ['about', 'About'],
   ['services', 'Services'],
   ['work', 'Work'],
   ['websites', 'Websites'],

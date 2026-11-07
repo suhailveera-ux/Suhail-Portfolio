@@ -36,6 +36,7 @@ function readPosts() {
     const raw = fs.readFileSync(path.join(CONTENT_DIR, file), 'utf8');
     const { data, content } = parseFrontmatter(raw);
     const { html, toc } = renderMarkdown(content);
+    const faq = extractFAQ(content);
     const words = content.trim().split(/\s+/).filter(Boolean).length;
     const readingTime = data.readingTime || Math.max(1, Math.round(words / 200));
     const slug = data.slug || slugify(data.title || file.replace(/\.md$/, ''));
@@ -44,6 +45,7 @@ function readPosts() {
       slug,
       html,
       toc,
+      faq,
       readingTime,
       status: data.status || 'draft',
       isDraft: (data.status || 'draft') !== 'published',
@@ -52,6 +54,38 @@ function readPosts() {
   // newest first
   posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
   return posts;
+}
+
+// Pulls Q/A pairs out of a "## Frequently Asked Questions" section (### per
+// question, plain-paragraph answer) so we can emit real FAQPage schema from
+// the same markdown that renders the visible FAQ — one source of truth,
+// no separate data file to keep in sync.
+function extractFAQ(rawMarkdown) {
+  const lines = rawMarkdown.replace(/\r\n/g, '\n').split('\n');
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+.*frequently asked questions/i.test(lines[i])) { start = i + 1; break; }
+  }
+  if (start === -1) return [];
+  const faqs = [];
+  let question = null;
+  let answerLines = [];
+  const flush = () => {
+    if (question) {
+      const answer = answerLines.join(' ').replace(/\s+/g, ' ').trim().replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1');
+      if (answer) faqs.push({ question: question.trim(), answer });
+    }
+    question = null; answerLines = [];
+  };
+  for (let i = start; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^##\s+/.test(line)) break; // next top-level section ends the FAQ block
+    const q = line.match(/^###\s+(.*)$/);
+    if (q) { flush(); question = q[1]; continue; }
+    if (question && line.trim()) answerLines.push(line.trim());
+  }
+  flush();
+  return faqs;
 }
 
 function fmtDate(iso) {
@@ -265,16 +299,23 @@ ${tocHTML(post.toc)}
 </div>
 </section>`;
 
+    const authorPerson = {
+      '@type': 'Person',
+      name: post.author || BRAND_NAME,
+      url: `${SITE_URL}/`,
+      ...(post.authorTitle ? { jobTitle: post.authorTitle } : {}),
+    };
+
     const jsonLd = [
       {
         '@context': 'https://schema.org',
-        '@type': 'Article',
+        '@type': 'BlogPosting',
         headline: post.title,
         description,
         image: ogImage,
         datePublished: post.date ? `${post.date}T00:00:00+05:30` : undefined,
         dateModified: (post.updated || post.date) ? `${post.updated || post.date}T00:00:00+05:30` : undefined,
-        author: { '@type': 'Person', name: post.author || BRAND_NAME, url: `${SITE_URL}/` },
+        author: authorPerson,
         publisher: { '@type': 'Person', name: BRAND_NAME, url: `${SITE_URL}/` },
         mainEntityOfPage: { '@type': 'WebPage', '@id': url },
       },
@@ -288,6 +329,18 @@ ${tocHTML(post.toc)}
         ],
       },
     ];
+
+    if (post.faq && post.faq.length) {
+      jsonLd.push({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.faq.map(f => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer },
+        })),
+      });
+    }
 
     const html = page({
       title,
