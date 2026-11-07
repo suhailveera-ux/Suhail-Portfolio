@@ -3,7 +3,7 @@ title: "Why Digital Marketing Is Important for Businesses in 2026"
 slug: "importance-of-digital-marketing"
 description: "Why digital marketing matters for small and growing businesses — the core benefits, the strategies that actually work, and a practical first-90-days plan."
 image: "/assets/img/blog/importance-of-digital-marketing-cover.webp"
-imageAlt: "Illustration of digital marketing growth — Google Ads, Meta Ads, SEO, analytics and AI automation icons arranged around a rising growth line"
+imageAlt: "A glowing lime-green crystal formation on a dark podium, representing digital marketing growth, with the headline 'Why Digital Marketing Matters for Growth' and the Suhail Rashid Bhat (SRB) logo"
 category: "Digital Marketing"
 tags: ["Digital Marketing", "Performance Marketing", "SEO", "Meta Ads", "Google Ads", "AI Automation"]
 author: "Suhail Rashid Bhat"
