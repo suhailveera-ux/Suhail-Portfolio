@@ -60,8 +60,21 @@ const CONFIG={
   TESTIMONIALS:[],
   EXPERIENCE:[
     {period:'Oct 2026 to present',role:'Performance Marketing & AI Manager',org:'Global Chinar',text:'Paid acquisition, conversion tracking and AI-assisted lead flows under one roof.',current:true},
-    {period:'Jun to Oct 2026 / Jan to Oct 2026',role:'Performance Marketer / Meta Ads Executive',org:'ScalUp Agency',text:'Performance accounts across travel, hospitality, retail and recruitment.'},
-    {period:'Earlier chapter',role:'PhonePe',org:'Digital payments'},{period:'Earlier chapter',role:'Shriram Life Insurance',org:'Insurance'},{period:'Earlier chapter',role:'J&K Bank',org:'Banking'},{period:'Earlier chapter',role:'Jamkash Vehiceads',org:''},{period:'Earlier chapter',role:'Mattsen Kumar',org:''}
+    // Split from one combined entry ("Jun to Oct 2026 / Jan to Oct 2026" — "Performance
+    // Marketer / Meta Ads Executive") into two clearly labeled roles, same wording and
+    // dates as before, just no longer crammed into one line. Kept in the original order.
+    {period:'Jun to Oct 2026',role:'Performance Marketer',org:'ScalUp Agency',text:'Performance accounts across travel, hospitality, retail and recruitment.'},
+    {period:'Jan to Oct 2026',role:'Meta Ads Executive',org:'ScalUp Agency'},
+    // "Earlier chapter" entries have no specific dates on file — `note` renders a small
+    // placeholder tag (see xpHTML()) rather than leaving the gap unexplained.
+    {period:'Earlier chapter',role:'PhonePe',org:'Digital payments',note:'Dates to confirm'},
+    {period:'Earlier chapter',role:'Shriram Life Insurance',org:'Insurance',note:'Dates to confirm'},
+    {period:'Earlier chapter',role:'J&K Bank',org:'Banking',note:'Dates to confirm'},
+    {period:'Earlier chapter',role:'Jamkash Vehiceads',org:'',note:'Dates to confirm'},
+    // FLAGGED FOR SUHAIL'S REVIEW (see redesign brief, item 9): no org or dates on file
+    // for this one. Left in per instructions — do not delete; confirm details or whether
+    // it should stay before this goes live.
+    {period:'Earlier chapter',role:'Mattsen Kumar',org:'',note:'Dates to confirm · flagged for your review'}
   ],
   TOOLS:[['Meta Ads Manager','Paid social','mega'],['Google Ads','Paid search','target'],['GA4','Analytics','chart'],['Pixel + CAPI','Attribution','pulse'],['Google Tag Manager','Tracking','tag'],['WhatsApp Business API','Conversations','msg'],['CRM hand-off','Lead routing','route'],['Zapier / n8n','Workflows','bolt'],['Claude / ChatGPT automations','AI flows','bot']]
 };
