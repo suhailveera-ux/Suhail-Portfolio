@@ -344,3 +344,14 @@ main,.ftr{position:relative;z-index:2}
 @media(max-height:500px) and (orientation:landscape){.hero{min-height:auto;padding-top:78px;grid-template-columns:1fr 1fr}.hero-stage{width:min(34vw,240px);margin:0 auto}}
 @media(hover:none),(pointer:coarse){.cursor{display:none!important}.b-tile:hover,.site-card:hover{box-shadow:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+/* ---------- cross-document view transitions (homepage <-> /blog/) ---------- */
+/* Opt in to the browser-native "navigation" view-transition type for same-origin
+   full-page navigations (Chrome/Edge 126+). Browsers that don't recognise
+   @view-transition ignore it and navigate normally — that IS the progressive-
+   enhancement fallback, no JS required. Skipped under reduced-motion so no
+   cross-fade runs at all for those users. This same block is duplicated in
+   assets/css/base.css (the blog's stylesheet) so it applies in both directions. */
+@media (prefers-reduced-motion:no-preference){
+ @view-transition{navigation:auto}
+ ::view-transition-old(root),::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+}
