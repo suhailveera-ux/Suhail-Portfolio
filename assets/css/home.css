@@ -271,6 +271,12 @@ main,.ftr{position:relative;z-index:2}
 .tile{position:relative;display:flex;flex-direction:column;gap:14px;min-height:176px;padding:18px;border:1px solid var(--hair);border-radius:18px;background:rgba(10,18,14,.9);transition:border-color .3s,transform .4s var(--ease),box-shadow .3s}
 .tile:hover{border-color:var(--lime);transform:translateY(-6px);box-shadow:0 20px 50px -30px rgba(198,244,50,.5)}
 .mono-c{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--edge);font:800 14px var(--sans);letter-spacing:-.04em;transition:background .3s,color .3s,border-color .3s}.tile:hover .mono-c{background:var(--lime);color:var(--lime-ink);border-color:var(--lime)}
+/* Real client logo badge: same 48px circular footprint as .mono-c, so a tile with
+   no logo on file (none currently) falls back to the monogram with no layout shift. */
+.cl-badge{width:48px;height:48px;flex:none;border-radius:50%;overflow:hidden;background:#fff;display:block;transition:box-shadow .3s}
+.cl-badge img{width:100%;height:100%;object-fit:contain;display:block}
+.tile:hover .cl-badge{box-shadow:0 0 0 2px var(--lime)}
+.cl-badge.sm{width:28px;height:28px}
 .tile h3{font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.2}.tile .ind{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:4px}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}.badges span{font:700 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:6px;background:rgba(198,244,50,.1);color:var(--lime);border:1px solid rgba(198,244,50,.25)}.badges span.g{background:rgba(169,220,242,.1);color:var(--ice);border-color:rgba(169,220,242,.3)}
 .wall-empty{padding:30px 0;font:500 13px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
