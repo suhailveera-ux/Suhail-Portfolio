@@ -175,8 +175,10 @@ main,.ftr{position:relative;z-index:2}
 .steps-wrap{margin-top:40px}
 /* Progress rail: a thin filling line above the steps. Static (unscripted) state
    shows it fully drawn in a neutral tone, since there is no scroll progress to
-   report without JS/GSAP. initProcess() only turns it into an animated,
-   lime-filling indicator on desktop, inside the pinned (.is-pin) mode. */
+   report without JS/GSAP. initProcess() turns it into an animated,
+   lime-filling indicator on any device (desktop or mobile) once motion is
+   allowed, inside the pinned (.is-pin) mode; prefers-reduced-motion gets the
+   plain stacked fallback instead. */
 .steps-rail{position:relative;height:2px;border-radius:2px;background:var(--hair);overflow:hidden;margin-bottom:28px}
 .steps-fill{position:absolute;inset:0;width:100%;transform-origin:0 50%;transform:scaleX(1);background:var(--hair)}
 .process.is-pin .steps-fill{background:var(--lime);transform:scaleX(0)}

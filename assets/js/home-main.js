@@ -135,26 +135,26 @@ function initServices(){const sec=$('#services'),stage=$('#svc-stage'),panels=$$
  const apply=i=>{i=clamp(Math.round(i),0,max);if(i===svcIdx&&sec.dataset.r)return;svcIdx=i;sec.dataset.r='1';dots.forEach(b=>b.setAttribute('aria-selected',String(+b.dataset.t===i)));cur.textContent=pad2(i+1);scn.textContent=S[i].scene;prev.disabled=i===0;next.disabled=i===max;if(mode==='pin')panels.forEach((p,k)=>p.setAttribute('aria-hidden',String(k!==i)));GL.set(SCENE[i])};
  const go=i=>{i=clamp(i,0,max);if(mode==='pin'&&st){const y=st.start+(i/max)*(st.end-st.start);apply(i);lenis?lenis.scrollTo(y,{duration:1.1}):scrollTo({top:y,behavior:'smooth'})}else if(mode==='car'){const p=panels[i];stage.scrollTo({left:p.offsetLeft+p.offsetWidth/2-stage.clientWidth/2,behavior:reduced?'auto':'smooth'});apply(i)}else apply(i)};
  if(hasGSAP){const mm=gsap.matchMedia();
-  mm.add('(min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)',()=>{mode='pin';sec.classList.add('is-pin');gsap.set(panels.slice(1),{autoAlpha:0,y:26});gsap.set(nums.slice(1),{autoAlpha:0,scale:.96});
+  mm.add('(prefers-reduced-motion:no-preference)',()=>{mode='pin';sec.classList.add('is-pin');gsap.set(panels.slice(1),{autoAlpha:0,y:26});gsap.set(nums.slice(1),{autoAlpha:0,scale:.96});
    const tl=gsap.timeline({defaults:{ease:'power3.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:()=>'+='+Math.round(innerHeight*4.25),pin:true,scrub:.65,anticipatePin:1,invalidateOnRefresh:true,snap:{snapTo:1/max,delay:.16,duration:{min:.18,max:.45},directional:false,ease:'power2.inOut'},onUpdate:self=>apply(self.progress*max)}});
    for(let i=1;i<=max;i++){const at=i-1+.1;tl.to([panels[i-1],nums[i-1]],{autoAlpha:0,y:-22,duration:.38},at).fromTo([panels[i],nums[i]],{autoAlpha:0,y:28},{autoAlpha:1,y:0,duration:.5,immediateRender:false},at)}tl.to({},{duration:.001},max-.001);st=tl.scrollTrigger;
    return()=>{sec.classList.remove('is-pin');st=null;mode='static';gsap.set(panels.concat(nums),{clearProps:'all'})}});
-  mm.add('(max-width:1023px), (hover:none), (pointer:coarse), (prefers-reduced-motion:reduce)',()=>{mode='car';sec.classList.add('is-car');panels.forEach(p=>p.removeAttribute('aria-hidden'));let tk=false;const onS=()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{tk=false;const c=stage.scrollLeft+stage.clientWidth/2;let b=0,bd=1e9;panels.forEach((p,i)=>{const d=Math.abs(p.offsetLeft+p.offsetWidth/2-c);if(d<bd){bd=d;b=i}});apply(b)})};stage.addEventListener('scroll',onS,{passive:true});return()=>{stage.removeEventListener('scroll',onS);sec.classList.remove('is-car');mode='static'}})}
+  mm.add('(prefers-reduced-motion:reduce)',()=>{mode='car';sec.classList.add('is-car');panels.forEach(p=>p.removeAttribute('aria-hidden'));let tk=false;const onS=()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{tk=false;const c=stage.scrollLeft+stage.clientWidth/2;let b=0,bd=1e9;panels.forEach((p,i)=>{const d=Math.abs(p.offsetLeft+p.offsetWidth/2-c);if(d<bd){bd=d;b=i}});apply(b)})};stage.addEventListener('scroll',onS,{passive:true});return()=>{stage.removeEventListener('scroll',onS);sec.classList.remove('is-car');mode='static'}})}
  dots.forEach(b=>b.addEventListener('click',()=>go(+b.dataset.t)));prev.addEventListener('click',()=>go(svcIdx-1));next.addEventListener('click',()=>go(svcIdx+1));
  addEventListener('keydown',e=>{if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight'||mmOpen||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;const b=sec.getBoundingClientRect();if(!(b.top<innerHeight*.5&&b.bottom>innerHeight*.5))return;e.preventDefault();go(svcIdx+(e.key==='ArrowRight'?1:-1))});
  let pid=null,sx=0,sy=0;stage.addEventListener('pointerdown',e=>{if(mode!=='pin'||e.pointerType!=='mouse'||e.target.closest('a,button'))return;pid=e.pointerId;sx=e.clientX;sy=e.clientY});stage.addEventListener('pointerup',e=>{if(pid!==e.pointerId)return;pid=null;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))go(svcIdx+(dx<0?1:-1))});
  apply(0)}
-/* ---------- process: pin "Four moves" with a filling progress rail on desktop ---------- */
+/* ---------- process: pin "Four moves" with a filling progress rail (all devices; reduced-motion gets the stacked fallback) ---------- */
 function initProcess(){const sec=$('#process'),steps=$$('.step',sec),fill=$('#steps-fill'),max=steps.length-1;
  if(!hasGSAP||!steps.length)return; // CSS already shows the full 4-column grid with no JS/GSAP: fully usable, nothing to wire up.
  const mm=gsap.matchMedia();
- mm.add('(min-width:1024px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)',()=>{
+ mm.add('(prefers-reduced-motion:no-preference)',()=>{
   sec.classList.add('is-pin');gsap.set(steps.slice(1),{autoAlpha:0,y:20});gsap.set(fill,{scaleX:0});
   const tl=gsap.timeline({defaults:{ease:'power3.inOut'},scrollTrigger:{trigger:sec,start:'top top',end:()=>'+='+Math.round(innerHeight*3.4),pin:true,scrub:.6,anticipatePin:1,invalidateOnRefresh:true}});
   for(let i=1;i<=max;i++){const at=i-1+.05;tl.to(steps[i-1],{autoAlpha:0,y:-18,duration:.3},at).fromTo(steps[i],{autoAlpha:0,y:20},{autoAlpha:1,y:0,duration:.4,immediateRender:false},at)}
   tl.to(fill,{scaleX:1,duration:max,ease:'none'},0);
   return()=>{sec.classList.remove('is-pin');gsap.set(steps.concat(fill),{clearProps:'all'})}});
- mm.add('(max-width:1023px), (hover:none), (pointer:coarse), (prefers-reduced-motion:reduce)',()=>{
+ mm.add('(prefers-reduced-motion:reduce)',()=>{
   // Simplified stacked reveal: tag each step with data-fade so the page's existing
   // generic one-time fade-in (initReveals(), run later in boot()) picks them up —
   // no separate mobile animation code needed.
@@ -234,7 +234,7 @@ function runLoader(done){const ld=$('#loader');let called=false;const once=()=>{
 function boot(){try{
  if(motion)root.classList.add('motion');else root.classList.add('static');
  chromeHTML();app.innerHTML=heroHTML()+aboutHTML()+servicesHTML()+processHTML()+workHTML()+sitesHTML()+clientsHTML()+xpHTML()+toolsHTML()+wordsHTML()+contactHTML();
- if(hasGSAP){gsap.registerPlugin(ScrollTrigger);if(!reduced&&fine)lenis=makeInertia()}
+ if(hasGSAP){gsap.registerPlugin(ScrollTrigger);ScrollTrigger.config({ignoreMobileResize:true});if(!reduced&&fine)lenis=makeInertia()}
  initChrome();initCursor();const heroIn=initHero();initMarquee();initServices();initProcess();initSites();initWall();initWords();initXP();initFlow();initContact();bindTilt();initReveals();initCounters();
  if(window.ScrollTrigger)requestAnimationFrame(()=>ScrollTrigger.refresh());
  runLoader(()=>{
