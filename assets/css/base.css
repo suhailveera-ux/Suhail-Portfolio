@@ -441,3 +441,14 @@ main,.ftr{position:relative;z-index:2}
 .err404 .big{font:800 clamp(80px,16vw,180px)/1 var(--sans);color:var(--lime);letter-spacing:-.03em}
 .err404 h1{font:700 clamp(22px,2.6vw,32px)/1.3 var(--sans);color:var(--cream);margin:10px 0 14px}
 .err404 p{color:var(--body);margin-bottom:30px;max-width:46ch}
+
+/* ---------- cross-document view transitions (/blog/ <-> homepage) ---------- */
+/* Mirrors the block in assets/css/home.css: opts in to the browser-native
+   "navigation" view-transition type for same-origin full-page navigations
+   (Chrome/Edge 126+). Unsupported browsers ignore @view-transition and just
+   navigate normally — that's the fallback, no JS needed. Skipped under
+   reduced-motion. */
+@media (prefers-reduced-motion:no-preference){
+ @view-transition{navigation:auto}
+ ::view-transition-old(root),::view-transition-new(root){animation-duration:.42s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+}
