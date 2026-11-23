@@ -160,7 +160,7 @@ function initProcess(){const sec=$('#process'),steps=$$('.step',sec),fill=$('#st
 /* ---------- websites: visit buttons, copy, ripple ---------- */
 function initSites(){$$('.btn-visit').forEach(b=>{b.addEventListener('pointerdown',e=>{if(!motion)return;const r=b.getBoundingClientRect(),s=document.createElement('span');s.className='ripple';const d=Math.max(r.width,r.height)*2;s.style.cssText=`left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;width:${d}px;height:${d}px`;b.appendChild(s);setTimeout(()=>s.remove(),600)})});
  $$('[data-copy]').forEach(b=>{const lbl=$('span',b);b.addEventListener('click',async()=>{const ok=await copyText(b.dataset.copy);lbl.textContent=ok?'Copied ✓':'Copy failed';b.classList.toggle('ok',ok);setTimeout(()=>{lbl.textContent='Copy link';b.classList.remove('ok')},1500)})});
- $$('.br-body[data-screenshot]').forEach(b=>{const src=b.dataset.screenshot;if(src&&!$('img',b)){const im=new Image();im.className='br-shot';im.alt='';im.loading='lazy';im.onload=()=>{b.innerHTML='';b.appendChild(im)};im.src=src}})}
+ $$('.br-body[data-screenshot]').forEach(b=>{const src=b.dataset.screenshot;if(src&&!$('img',b)){const im=new Image();im.className='br-shot';im.alt='';im.onload=()=>{b.innerHTML='';b.appendChild(im)};im.onerror=()=>{};im.src=src}})}
 /* ---------- client wall: FLIP filter + orbit ---------- */
 function initWall(){const wall=$('#wall'),tiles=$$('.tile',wall),btns=$$('.chip-f'),empty=$('#wall-empty');let busy=false;
  const apply=f=>{const show=tiles.filter(t=>f==='all'||t.dataset.ind===f),leaving=tiles.filter(t=>!t.hidden&&!show.includes(t)),entering=show.filter(t=>t.hidden),staying=show.filter(t=>!t.hidden);
